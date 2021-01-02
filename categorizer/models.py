@@ -1,7 +1,12 @@
 '''
+venv -> categorizer
+
 Models are stored here
 
-Models try to 
+2D image 128 x LENGTH x 1    ->    Feature Vector
+
+
+
 
 '''
 

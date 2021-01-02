@@ -1,4 +1,6 @@
 """
+venv -> categorizer
+
 <Categorizer.py>
 
 1. Load pretrained model
@@ -8,8 +10,6 @@
 
 import librosa
 import numpy as np
-import librosa
-import librosa.display
 import matplotlib.pyplot as plt
 
 import torch
