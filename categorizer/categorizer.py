@@ -13,24 +13,34 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import torch
+import models
 
+device = 'cuda' if torch.cuda.is_available() and args.gpu else 'cpu'
 
 print_mel = False
 
+#   Load Classifier model.
+model = models.SimpleClassifier().to(device)
+#model = load_state_dict(from path or DB)
+model.eval()
 
+
+#   Load WAV file. 
+#   This method may change if DB is used later on.
 
 y,sr = librosa.load('../downloader/mp3_sources/file.wav')
 
+#   Change wav file to mel spectogram using Librosa library
 spec = librosa.feature.melspectrogram(y=y, sr=sr,fmax = 8000)
 
-print(spec.shape)
+#   Convert to pytorch tensor
+mel_torch = torch.from_numpy(spec).to(device)
 
+print(mel_torch.shape)
 
+result = model(mel_torch)
 
-
-
-
-
+print(result)
 
 
 if print_mel:
