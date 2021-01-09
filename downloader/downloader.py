@@ -35,37 +35,37 @@ data_dir.mkdir(parents=True, exist_ok=True)
 stage_directory = os.path.join(data_dir)
 
 
-links = [
-    "https://www.youtube.com/watch?v=zajkxWnnAaI&ab_channel=%EC%BD%94%EB%B2%A8CovelTV"
-]
+link = str(input())
+
+
 
 i = 0
-for link in links: 
-    yt = YouTube(link).streams.filter(only_audio=True).first()
-    
-    if yt == None:
-        print("ERROR on link :" + str(link))
-        continue
 
-    fname = yt.default_filename
-    thumbnail_url = YouTube(link).thumbnail_url
+yt = YouTube(link).streams.filter(only_audio=True).first()
 
+if yt == None:
+    print("ERROR on link :" + str(link))
+    continue
 
-    download = yt.download(stage_directory)
-    
-    src = download
-    dst = download[:-4] + ".wav"
-    sound = AudioSegment.from_file(src,format="mp4")
-    sound.export(dst, format="wav")
-
-    os.remove(src)
-
-    music = {'Title':fname,'Thumbnail':thumbnail_url,'x':'','y':'','wav_file':dst,'link':link,'processed':'False','mel_link':''}
-
-    music_inserted = collection.insert_one(music)
+fname = yt.default_filename
+thumbnail_url = YouTube(link).thumbnail_url
 
 
+download = yt.download(stage_directory)
 
-    print(music_inserted)
+src = download
+dst = download[:-4] + ".wav"
+sound = AudioSegment.from_file(src,format="mp4")
+sound.export(dst, format="wav")
 
-    #   mongoDB 에 파일의 존재를 알리자!
+os.remove(src)
+
+music = {'Title':fname,'Thumbnail':thumbnail_url,'x':'','y':'','wav_file':dst,'link':link,'processed':'False','mel_link':''}
+
+music_inserted = collection.insert_one(music)
+
+
+
+print(music_inserted)
+
+#   mongoDB 에 파일의 존재를 알리자!
