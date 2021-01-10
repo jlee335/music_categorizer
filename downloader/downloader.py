@@ -34,7 +34,7 @@ data_dir.mkdir(parents=True, exist_ok=True)
 
 stage_directory = os.path.join(data_dir)
 
-
+print("insert music link:")
 link = str(input())
 
 
@@ -45,13 +45,17 @@ yt = YouTube(link).streams.filter(only_audio=True).first()
 
 if yt == None:
     print("ERROR on link :" + str(link))
-    continue
+
+
+print("got link : " + str(link))
 
 fname = yt.default_filename
 thumbnail_url = YouTube(link).thumbnail_url
 
 
 download = yt.download(stage_directory)
+
+print("download complete")
 
 src = download
 dst = download[:-4] + ".wav"
