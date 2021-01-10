@@ -12,6 +12,8 @@ var context = canvas.getContext('2d'); // Return drawing context.
 // This variable will be used to get functions that interact with client.js
 var Webpage = {};
 
+var icons = [];
+
 class IconButton 
 {
     constructor(x,y,w,h,youtube_link,thumbnail_link) 
@@ -68,20 +70,22 @@ Webpage.load = function(array)
         console.log(mongo_entry["Title"]);
         var icon = new IconButton(mongo_entry["x"] * 100,mongo_entry["y"] * 100,100,100,mongo_entry["link"],mongo_entry["Thumbnail"]);
         icon.draw(context);
-
-        canvas.addEventListener('click', (event) => {
-            // rect 
-            const rect = canvas.getBoundingClientRect();
-        
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-        
-            icon.clicked(x,y);
-        
-            console.log(rect);
-        });
-
+        icons.push(icon);
     }
+
+    canvas.addEventListener('click', (event) => {
+        // rect 
+        const rect = canvas.getBoundingClientRect();
+    
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        for(var i = 0; i < array.length; i++){
+            var icon = icons[i];
+            icon.clicked(x,y);
+            
+        }
+    });
 }
 
 //var shapes = []; // List of shapes!

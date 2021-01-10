@@ -9,7 +9,7 @@ What this will do
 
 const path = require('path');
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://jlee335:jHPvQvjSqVWXpSQq@cluster0.yk0dr.mongodb.net/database?retryWrites=true&w=majority";
+const uri = "mongodb+srv://Web_Display_Server:asnka4z8m5NEiJP2@cluster0.yk0dr.mongodb.net/database?retryWrites=true&w=majority";
 
 
 const express = require('express');
@@ -25,7 +25,7 @@ const mongo_client = new MongoClient(uri, { useNewUrlParser: true });
 
 app.get('/', (req, res) => {
 
-    // Send html file to client
+    console.log("GET /");
     res.sendFile(path.join(__dirname + '/client/index.html'));
 
 
@@ -38,35 +38,36 @@ server.listen(process.env.PORT || 7000,function(){
 });
 
 
-io.on('connection',function(socket){
 
-    socket.on('request_entries', function() {
-        console.log("request entries recieved!");
-        
-        mongo_client.connect(err => {
-            // Error handling. 
-            if (err) {
-                console.error("MongoDB Connection has failed :(");
-                return;
-            }
-        
-            // Processed DB 에서 
+
+mongo_client.connect(err => {
+    // Error handling. 
+    if (err) {
+        console.error("MongoDB Connection has failed :(");
+        return;
+    }
+
+    io.on('connection',function(socket){
+
+        socket.on('request_entries', function() {
+            console.log("request entries recieved!");
             const collection = mongo_client.db("database").collection("processed");
-            
+    
             collection.find({}).toArray(function(err, result) {
                 if (err) throw err;
-    
+        
                 console.log(result);
                 socket.emit('reply_entries',result);
             });
+            console.log("closing client connection");
     
-            mongo_client.close();
         });
-
-
-
+        
+        // Establish connection to MongoDB and get what we need
     });
-    
-    // Establish connection to MongoDB and get what we need
-});
 
+    // Processed DB 에서 
+
+
+    //mongo_client.close();
+});
