@@ -1,18 +1,3 @@
-// Search in html element to find canvas!
-var canvas = document.querySelector('canvas');
-
-// Set canvas inner width and height to what is in window
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-var context = canvas.getContext('2d'); // Return drawing context.
-
-// example: Make rectangle
-
-// This variable will be used to get functions that interact with client.js
-var Webpage = {};
-
-var icons = []; 
 
 class IconButton 
 {
@@ -58,9 +43,7 @@ class IconButton
 }
 
 
-
-
-Webpage.load = function(array)
+function fillCanvas(canvas,context,icons,array)
 {
     console.log("Called Webpage.load");
     //array is mongoDB entries in array format.
@@ -88,11 +71,4 @@ Webpage.load = function(array)
     });
 }
 
-//var shapes = []; // List of shapes!
-
-//var icon = new IconButton(100,100,100,100,"https://www.youtube.com/watch?v=xbdJf9MRL7A",'https://mdn.mozillademos.org/files/5395/backdrop.png');
-
-
-
-
-
+export {fillCanvas};

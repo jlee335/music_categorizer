@@ -1,0 +1,16 @@
+{
+  "name": "react_server",
+  "version": "1.0.0",
+  "description": "This is the server application that handles requests from clients towards MongoDB. ",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^3.6.4",
+    "socket.io": "^3.1.1"
+  }
+}
