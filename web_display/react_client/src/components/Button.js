@@ -1,4 +1,7 @@
 
+
+
+
 const Button = ({color,text}) => {
 
     const onClick = (e) => {
