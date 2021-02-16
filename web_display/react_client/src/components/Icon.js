@@ -15,20 +15,39 @@ TODOs
 
 import React from 'react'
 import Draggable from 'react-draggable'
+import IconDialog from './IconDialog'
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Button from '@material-ui/core/Button';
+import Drawer from '@material-ui/core/Drawer';
 
 export default function Icon({title,x,y,thumb_width,thumb_height,thumbnail_link,youtube_link}) {
     
+    // Dialog Open Close status is kept here
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+      };
+    
+    const handleClose = () => {
+        console.log("closed")
+        setOpen(false);
+    };
+
     var textStyle = {
         background: "#eee",
         padding: "0px",
-        margin: "100px 0px 0px 0px",
-        fontSize: "5px",
+        margin: `${thumb_width}px 0px 0px 0px`,
+        fontSize: `${thumb_width/5}px`,
       };
 
-
     return(
-        <a href={youtube_link} className='icon'>
-            <div 
+        <div>
+            <div onClick={handleClickOpen} 
                 style={{
                     marign: "5px",
                     position: "absolute",
@@ -42,7 +61,31 @@ export default function Icon({title,x,y,thumb_width,thumb_height,thumbnail_link,
             }}>
                 <body style={textStyle} >{title}</body>
             </div>
-        </a>
+            <Drawer 
+                open={open}
+                onClose={handleClose}
+                onBackdropClick={handleClose}
+                variant="persistent"
+                anchor="bottom"
+            >
+                <DialogTitle id="simple-dialog-title">{title}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Let Google help apps determine location. This means sending anonymous location data to
+                        Google, even when no apps are running.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Disagree
+                    </Button>
+                    <Button onClick={handleClose} color="primary">
+                        Agree
+                    </Button>
+                </DialogActions>
+            </Drawer>
+        </div>
+        
     );
 }
 
