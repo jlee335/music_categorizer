@@ -10,16 +10,43 @@ TODOs
 
 import React, { useState, useEffect } from "react";
 import Icon from './Icon'
-import socketio from 'socket.io-client';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import IconDialog from './IconDialog'
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Button from '@material-ui/core/Button';
+import Drawer from '@material-ui/core/Drawer';
+import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
-const ENDPOINT = "http://localhost:7000";
 
-const Map = () => {
+import { makeStyles } from '@material-ui/core/styles';
+import CardMedia from '@material-ui/core/CardMedia';
+import { CardActionArea, Divider } from "@material-ui/core";
+
+
+const drawerWidth = 300
+
+const useStyles = makeStyles(theme => ({
+    drawer: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+    drawerPaper: {
+      width: drawerWidth,
+    },
+  }));
+
+const Map = (array) => {
+    console.log(array)
+    const classes = useStyles();
     
-    var icons = []
-
-    const [tarray,updateArray] = useState([<div>Loading...</div>])
+    const [open, setOpen] = useState(false);
+    const [currentSong, setCurrentSong] = useState(["","",""]);
 
     // Window Resize 대비해서 이것도 짜자
     const [dimensions, setDimensions] = useState({ 
@@ -37,29 +64,32 @@ const Map = () => {
             })
         }
         window.addEventListener('resize', handleResize)
-
-        // SocketIO 연결하기
-        const socket = socketio(ENDPOINT,{transports: ['websocket']});
-
-        socket.on("reply_entries", array => {
-            updateArray(array);
-            console.log(array)
-        });
     
-        socket.emit('request_entries');
         return () => {
             window.removeEventListener('resize', handleResize);
-            socket.disconnect();
         }
     
       }, []);
+
+    // Functions for Drawer
+    const handleClickOpen = (song) => {
+        console.log(song)
+        setCurrentSong(song)
+        console.log("setsong "+song)
+        setOpen(true);
+    };
+    
+    const handleClose = () => {
+        console.log("closed")
+        setOpen(false);
+    };
 
 
     var width = dimensions.width * 4/5
     var height = dimensions.height * 4/5
 
-    var iconList = tarray.map((mongo_entry) => {
-
+    var iconList = (array.array).map((mongo_entry) => {
+        
         var title = mongo_entry["Title"];
         var x = mongo_entry["x"] * width;
         var y = mongo_entry["y"] * height;
@@ -68,19 +98,21 @@ const Map = () => {
         var youtube_link = mongo_entry["link"];
         var thumbnail_link = mongo_entry["Thumbnail"];
         return (
-                <Icon 
-                    title={title}
-                    x={x}
-                    y={y}
-                    thumb_width={thumb_width}
-                    thumb_height={thumb_height}
-                    youtube_link={youtube_link}
-                    thumbnail_link={thumbnail_link}
-                 />
+            <Icon 
+                title={title}
+                x={x + drawerWidth}
+                y={y}
+                thumb_width={thumb_width}
+                thumb_height={thumb_height}
+                youtube_link={youtube_link}
+                thumbnail_link={thumbnail_link}
+                handleClickOpen={handleClickOpen}
+                />
         )
     })
     
     return(
+    <div>
     <TransformWrapper>
         {({ zoomIn, zoomOut, resetTransform, positionX, positionY, ...rest }) => (
           <React.Fragment>
@@ -94,6 +126,45 @@ const Map = () => {
           </React.Fragment>
         )}
       </TransformWrapper>
+        <Drawer 
+            className={classes.drawer}
+            classes={{
+                paper: classes.drawerPaper,
+              }}
+            open={open}
+            onClose={handleClose}
+            onBackdropClick={handleClose}
+            containerClassName="drawer-side-drawer"
+            variant="persistent"
+            anchor="left"       
+        >
+            <CardActionArea
+                style={{display: "table-cell"}} 
+                href={currentSong[2]} 
+                target="_blank"
+            >
+                <CardMedia
+                    component="img"
+                    height={drawerWidth}
+                    image={currentSong[1]}
+                />  
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2">
+                        {currentSong[0]}
+                    </Typography>
+                </CardContent>
+            </CardActionArea>
+            
+            <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                    Close
+                </Button>
+            </DialogActions>
+
+        </Drawer>
+    </div>
+
+      
     );
 
     

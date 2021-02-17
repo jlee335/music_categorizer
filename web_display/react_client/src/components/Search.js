@@ -2,29 +2,33 @@
 import PropTypes from 'prop-types';
 import Button from './Button'
 
-const Search = ({name}) => {
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+
+
+
+const Search = ({array}) => {
     return (
         <search className='search'>
-            <h3>{name}'s searchbar</h3>
-            <Button color='green' text='Search'/>
+            <Autocomplete
+                freeSolo
+                id="free-solo-2-demo"
+                disableClearable
+                options={array.array}
+                getOptionLabel={(option) => option.Title}
+                style={{ width: 300 }}
+                renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Search input"
+                      margin="normal"
+                      variant="outlined"
+                      InputProps={{ ...params.InputProps, type: 'search' }}
+                    />
+                  )}
+            />
         </search>
     )
-}
-
-
-
-Search.defaultProps = {
-    name:'Anonymous'
-}
-
-// For robustness of what kind of data is given
-Search.propTypes = {
-    name: PropTypes.string.isRequired,
-}
-
-// Can add inside the css thingy code
-const headingStyle = {
-    color: 'blue',backgroundColor: "gray"
 }
 
 export default Search

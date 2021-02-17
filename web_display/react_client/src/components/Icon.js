@@ -14,78 +14,62 @@ TODOs
 
 
 import React from 'react'
-import Draggable from 'react-draggable'
-import IconDialog from './IconDialog'
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import Button from '@material-ui/core/Button';
-import Drawer from '@material-ui/core/Drawer';
 
-export default function Icon({title,x,y,thumb_width,thumb_height,thumbnail_link,youtube_link}) {
-    
+import Avatar from '@material-ui/core/Avatar';
+
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+
+
+
+export default function Icon({title,x,y,thumb_width,thumb_height,thumbnail_link,youtube_link,handleClickOpen}) {
+    const useStyles = makeStyles((theme) => ({
+        root: {
+          display: 'flex',
+          '& > *': {
+            margin: theme.spacing(1),
+          },
+        },
+        small: {
+          width: theme.spacing(3),
+          height: theme.spacing(3),
+        },
+        large: {
+          position: "absolute",
+          top: y*5/6,
+          left: x*5/6,
+          width: theme.spacing(7),
+          height: theme.spacing(7),
+        },
+      }));
+    const classes = useStyles();
+
     // Dialog Open Close status is kept here
-    const [open, setOpen] = React.useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-      };
-    
-    const handleClose = () => {
-        console.log("closed")
-        setOpen(false);
-    };
 
     var textStyle = {
-        background: "#eee",
         padding: "0px",
         margin: `${thumb_width}px 0px 0px 0px`,
         fontSize: `${thumb_width/5}px`,
       };
 
+    function handleClick() {
+        // Here, we invoke the callback with the new value
+        handleClickOpen([title,thumbnail_link,youtube_link]);
+    }
+    
+    const bgi = `url(${thumbnail_link})`
+
     return(
         <div>
-            <div onClick={handleClickOpen} 
-                style={{
-                    marign: "5px",
-                    position: "absolute",
-                    left: `${x}px`,    
-                    top: `${y}px`,
-                    height: `${thumb_width}px`,
-                    width: `${thumb_height}px`,
-                    backgroundImage: `url(${thumbnail_link})`,
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover"
-            }}>
-                <body style={textStyle} >{title}</body>
-            </div>
-            <Drawer 
-                open={open}
-                onClose={handleClose}
-                onBackdropClick={handleClose}
-                variant="persistent"
-                anchor="bottom"
+            <Avatar 
+            className={classes.large}
+            onClick={handleClick}
+            src={thumbnail_link}
             >
-                <DialogTitle id="simple-dialog-title">{title}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Let Google help apps determine location. This means sending anonymous location data to
-                        Google, even when no apps are running.
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Disagree
-                    </Button>
-                    <Button onClick={handleClose} color="primary">
-                        Agree
-                    </Button>
-                </DialogActions>
-            </Drawer>
+            </Avatar>
         </div>
-        
+
     );
 }
 
