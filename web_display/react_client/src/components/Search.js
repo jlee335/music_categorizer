@@ -4,19 +4,52 @@ import Button from './Button'
 
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import React, { useState, useEffect } from "react";
 
 
 
-const Search = ({array}) => {
+const Search = ({array,handleClickOpen}) => {
+
+
+    const [value, setValue] = useState(array[0]);
+    const [inputValue, setInputValue] = useState('');
+
+
+    function setValueEvent(newValue) {
+        // newValue 에 해당되는 Drawer 열기!
+        var title = newValue["Title"]
+        var thumbnail_link = newValue["Thumbnail"]
+        var youtube_link = newValue["link"]
+
+        handleClickOpen([title,thumbnail_link,youtube_link])
+        setValue(newValue)
+    }
+
+
+    console.log(array)
     return (
-        <search className='search'>
             <Autocomplete
+            
+                style={{
+                    zIndex: 2,
+                    backgroundColor: "#FFFFFF",
+                    width: 300}}
+                position="absolute" 
+                value={value}
+                onChange={(event, newValue) => {
+                    setValueEvent(newValue);
+                }}
+
+                onInputChange={(event, newInputValue) => {
+                    setInputValue(newInputValue);
+                }}
+
+                margin="30px"
                 freeSolo
                 id="free-solo-2-demo"
                 disableClearable
-                options={array.array}
-                getOptionLabel={(option) => option.Title}
-                style={{ width: 300 }}
+                options={array}
+                getOptionLabel={(option) => option["Title"]}
                 renderInput={(params) => (
                     <TextField
                       {...params}
@@ -27,7 +60,6 @@ const Search = ({array}) => {
                     />
                   )}
             />
-        </search>
     )
 }
 

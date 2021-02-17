@@ -22,27 +22,43 @@ import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-
+import Search from './Search'
+import { fade } from '@material-ui/core/styles/colorManipulator';
+import Toolbar from '@material-ui/core/Toolbar';
 
 import { makeStyles } from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
 import { CardActionArea, Divider } from "@material-ui/core";
+import AppBar from '@material-ui/core/AppBar';
 
 
 const drawerWidth = 300
 
-const useStyles = makeStyles(theme => ({
-    drawer: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-    drawerPaper: {
-      width: drawerWidth,
-    },
-  }));
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+  },
+  appBar: {
+    backgroundColor:  fade("#555555", 0),
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  drawer: {
+
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  drawerContainer: {
+    overflow: 'auto',
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+}));
 
 const Map = (array) => {
-    console.log(array)
+    //console.log(array)
     const classes = useStyles();
     
     const [open, setOpen] = useState(false);
@@ -62,6 +78,8 @@ const Map = (array) => {
               height: window.innerHeight,
               width: window.innerWidth
             })
+            console.log(dimensions)
+
         }
         window.addEventListener('resize', handleResize)
     
@@ -85,8 +103,8 @@ const Map = (array) => {
     };
 
 
-    var width = dimensions.width * 4/5
-    var height = dimensions.height * 4/5
+    var width = dimensions.width 
+    var height = dimensions.height 
 
     var iconList = (array.array).map((mongo_entry) => {
         
@@ -112,8 +130,24 @@ const Map = (array) => {
     })
     
     return(
-    <div>
-    <TransformWrapper>
+    <div className={classes.root}>
+
+      <AppBar position="fixed" className={classes.appBar} elevation={0}>
+        <Toolbar>
+          <Search 
+            array = {array.array}
+            handleClickOpen={handleClickOpen}
+          />
+          <Typography variant="h6" color="primary">
+              {dimensions.width}x{dimensions.height}
+          </Typography>
+        </Toolbar>
+
+      </AppBar>
+    
+      <TransformWrapper
+        wheel={{ step: 30 }}
+      >
         {({ zoomIn, zoomOut, resetTransform, positionX, positionY, ...rest }) => (
           <React.Fragment>
             <TransformComponent>
@@ -126,42 +160,44 @@ const Map = (array) => {
           </React.Fragment>
         )}
       </TransformWrapper>
-        <Drawer 
-            className={classes.drawer}
-            classes={{
-                paper: classes.drawerPaper,
-              }}
-            open={open}
-            onClose={handleClose}
-            onBackdropClick={handleClose}
-            containerClassName="drawer-side-drawer"
-            variant="persistent"
-            anchor="left"       
-        >
-            <CardActionArea
-                style={{display: "table-cell"}} 
-                href={currentSong[2]} 
-                target="_blank"
-            >
-                <CardMedia
-                    component="img"
-                    height={drawerWidth}
-                    image={currentSong[1]}
-                />  
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        {currentSong[0]}
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-            
-            <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                    Close
-                </Button>
-            </DialogActions>
+      <Drawer 
+          className={classes.drawer}
+          classes={{
+              paper: classes.drawerPaper,
+            }}
+          open={open}
+          onClose={handleClose}
+          onBackdropClick={handleClose}
+          containerClassName="drawer-side-drawer"
+          variant="persistent"
+          anchor="left"       
+      >
+        <Toolbar />
+        <Divider />
+          <CardActionArea
+              style={{display: "table-cell"}} 
+              href={currentSong[2]} 
+              target="_blank"
+          >
+              <CardMedia
+                  component="img"
+                  height={drawerWidth}
+                  image={currentSong[1]}
+              />  
+              <CardContent>
+                  <Typography gutterBottom variant="h5" component="h2">
+                      {currentSong[0]}
+                  </Typography>
+              </CardContent>
+          </CardActionArea>
+          
+          <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                  Close
+              </Button>
+          </DialogActions>
 
-        </Drawer>
+      </Drawer>
     </div>
 
       

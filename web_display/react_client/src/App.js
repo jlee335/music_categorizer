@@ -1,4 +1,3 @@
-import Search from './components/Search'
 import Map from './components/Map'
 import socketio from 'socket.io-client';
 
@@ -15,7 +14,7 @@ function App() {
         const socket = socketio(ENDPOINT,{transports: ['websocket']});
 
         socket.on("reply_entries", array => {
-            console.log("Loaded!")
+            //console.log("Loaded!")
             updateArray(array);
         });
     
@@ -28,7 +27,6 @@ function App() {
 
     return (
         <div className = 'App'>
-            <Search array = {array}/>
             <Map array = {array}/>
         </div>
     )
